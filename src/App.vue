@@ -1,29 +1,50 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <Navbar>
+    </Navbar>
+     <Login :Loginfunction='login'>
+    </Login>
   </div>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
+</style>
+
+<script>
+import {LOGIN_URL,SERVERBASEURL} from './constant/backend_url.js'
+export default {
+  data() {
+    return {
+      title: this.$store.state.token
+    };
+  },
+  methods:{
+    login:async function(mobileEmail,password){
+      try{
+            alert('inside');
+            let body={
+            mobileEmail:this.mobileEmail,
+              password:this.password
+            }
+            alert(JSON.stringify(body))
+              const res=await fetch(`${SERVERBASEURL}${LOGIN_URL}`,{
+              method: 'POST',
+            body: JSON.stringify(body),
+            headers:{
+                "Content-Type": "application/json",
+            }
+              })
+
+              let data=await res.json()
+              alert(JSON.stringify(data))
+              this.$store.state.token=data.token;
+      }
+      catch(err){
+             alert(err)
+      }
+      
     }
   }
-}
-</style>
+ 
+};
+</script>
